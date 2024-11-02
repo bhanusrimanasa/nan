@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AcademiHub - Share Academic Excellence</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Existing CSS remains the same */
+
+        /* Auth Modal Styles */
+        .auth-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .auth-container {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .auth-header h2 {
+            color: var(--primary);
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .auth-header p {
+            color: #64748b;
+        }
+
+        .auth-options {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .auth-btn {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .auth-btn.primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .auth-btn.secondary {
+            background: #f8fafc;
+            color: var(--dark);
+            border: 2px solid var(--primary);
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .error-message {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        /* Dashboard Styles */
+        .dashboard {
+            display: none;
+            margin-top: 80px;
+            padding: 2rem 5%;
+        }
+
+        .dashboard.active {
+            display: block;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-title {
+            color: var(--dark);
+        }
+
+        .main-content {
+            display: none;
+        }
+
+        .main-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Auth Modal -->
+    <div class="auth-modal" id="authModal">
+        <div class="auth-container">
+            <div class="auth-header">
+                <h2>Welcome to AcademiHub</h2>
+                <p>Join our academic community</p>
+            </div>
+
+            <!-- Auth Options -->
+            <div class="auth-options" id="authOptions">
+                <button class="auth-btn primary" onclick="showForm('login')">Login</button>
+                <button class="auth-btn secondary" onclick="showForm('register')">Create Account</button>
+            </div>
+
+            <!-- Login Form -->
+            <form id="loginForm" class="auth-form" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="loginEmail">Institute Email ID</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <div class="error-message" id="loginError">Invalid email or password</div>
+                <button type="submit" class="auth-btn primary">Login</button>
+                <button type="button" class="auth-btn secondary" onclick="showAuthOptions()">Back</button>
+            </form>
+
+            <!-- Registration Form -->
+            <form id="registerForm" class="auth-form" onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label for="studentName">Student Name</label>
+                    <input type="text" id="studentName" required>
+                </div>
+                <div class="form-group">
+                    <label for="phoneNumber">Phone Number</label>
+                    <input type="tel" id="phoneNumber" required>
+                </div>
+                <div class="form-group">
+                    <label for="instituteEmail">Institute Email ID</label>
+                    <input type="email" id="instituteEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="collegeName">College Name</label>
+                    <input type="text" id="collegeName" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Set Password</label>
+                    <input type="password" id="password" required>
+                </div>
+                <div class="error-message" id="registerError">Please check your inputs</div>
+                <button type="submit" class="auth-btn primary">Create Account</button>
+                <button type="button" class="auth-btn secondary" onclick="showAuthOptions()">Back</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Content (your existing content) -->
+    <div class="main-content" id="mainContent">
+        <!-- Your existing content here -->
+    </div>
+
+    <!-- Dashboard -->
+    <div class="dashboard" id="dashboard">
+        <div class="dashboard-header">
+            <h1 class="dashboard-title">Welcome to Your Dashboard</h1>
+            <button class="auth-btn secondary" onclick="logout()">Logout</button>
+        </div>
+        <div class="dashboard-content">
+            <!-- Add dashboard content here -->
+        </div>
+    </div>
+
+    <script>
+        // Show/hide forms
+        function showForm(formType) {
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const authOptions = document.getElementById('authOptions');
+
+            loginForm.classList.remove('active');
+            registerForm.classList.remove('active');
+            authOptions.style.display = 'none';
+
+            if (formType === 'login') {
+                loginForm.classList.add('active');
+            } else if (formType === 'register') {
+                registerForm.classList.add('active');
+            }
+        }
+
+        function showAuthOptions() {
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const authOptions = document.getElementById('authOptions');
+
+            loginForm.classList.remove('active');
+            registerForm.classList.remove('active');
+            authOptions.style.display = 'flex';
+        }
+
+        // Handle login
+        function handleLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            // Mock authentication - replace with actual backend authentication
+            if (email && password) {
+                document.getElementById('authModal').style.display = 'none';
+                document.getElementById('mainContent').classList.add('active');
+                document.getElementById('dashboard').classList.add('active');
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+            }
+        }
+
+        // Handle registration
+        function handleRegister(event) {
+            event.preventDefault();
+            const name = document.getElementById('studentName').value;
+            const phone = document.getElementById('phoneNumber').value;
+            const email = document.getElementById('instituteEmail').value;
+            const college = document.getElementById('collegeName').value;
+            const password = document.getElementById('password').value;
+
+            // Mock registration - replace with actual backend registration
+            if (name && phone && email && college && password) {
+                alert('Account created successfully! Please login.');
+                showForm('login');
+            } else {
+                document.getElementById('registerError').style.display = 'block';
+            }
+        }
+
+        // Handle logout
+        function logout() {
+            document.getElementById('authModal').style.display = 'flex';
+            document.getElementById('mainContent').classList.remove('active');
+            document.getElementById('dashboard').classList.remove('active');
+            showAuthOptions();
+        }
+
+        // Your existing JavaScript code here
+    </script>
+</body>
+</html>
